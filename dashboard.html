@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>داشبورد کاربر</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+</head>
+<body>
+  <h2>داشبورد گیم‌نت UFO</h2>
+  <p id="user-info">در حال بارگذاری...</p>
+  <button onclick="signOut()">خروج از حساب</button>
+
+  <script>
+    const supabaseUrl = "https://qdyudrhnzbrgwerzqats.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkeXVkcmhuemJyZ3dlcnpxYXRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgxNjQzMTYsImV4cCI6MjA2Mzc0MDMxNn0.lVieDzL-8UK8e0QDUi1B3coI8tOVwWvoPFYxT4kik10";
+
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+    // چک می‌کنه کاربر لاگین هست یا نه
+    supabase.auth.getUser().then(({ data: { user }, error }) => {
+      if (user) {
+        document.getElementById('user-info').innerText = `👤 خوش آمدی ${user.email}`;
+      } else {
+        window.location.href = "auth.html"; // اگه لاگین نیست، برگرد auth.html
+      }
+    });
+
+    async function signOut() {
+      await supabase.auth.signOut();
+      window.location.href = "auth.html";
+    }
+  </script>
+</body>
+</html>
