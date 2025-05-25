@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <title>ورود / ثبت‌نام</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-  <h2>ورود یا ثبت‌نام به گیم‌نت UFO</h2>
+  <h2>ورود یا ثبت‌نام</h2>
 
   <input id="email" type="email" placeholder="ایمیل">
   <input id="password" type="password" placeholder="رمز عبور">
@@ -17,19 +17,23 @@
   <p id="msg"></p>
 
   <script>
+    const { createClient } = supabase; // ✅ درست گرفتن متد createClient
+
     const supabaseUrl = "https://qdyudrhnzbrgwerzqats.supabase.co";
     const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkeXVkcmhuemJyZ3dlcnpxYXRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgxNjQzMTYsImV4cCI6MjA2Mzc0MDMxNn0.lVieDzL-8UK8e0QDUi1B3coI8tOVwWvoPFYxT4kik10";
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    const client = createClient(supabaseUrl, supabaseKey); // ✅ ساخت کلاینت Supabase
 
     async function signUp() {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
-      const { error } = await supabase.auth.signUp({ email, password });
+      const { data, error } = await client.auth.signUp({ email, password });
       if (error) {
         document.getElementById("msg").innerText = "❌ خطا در ثبت‌نام: " + error.message;
+        console.log(error);
       } else {
         document.getElementById("msg").innerText = "✅ ثبت‌نام موفق! لطفاً ایمیلت را تأیید کن.";
+        console.log(data);
       }
     }
 
@@ -37,11 +41,12 @@
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { data, error } = await client.auth.signInWithPassword({ email, password });
       if (error) {
         document.getElementById("msg").innerText = "❌ ورود ناموفق: " + error.message;
+        console.log(error);
       } else {
-        window.location.href = "dashboard.html"; // بعد از ورود موفق
+        window.location.href = "dashboard.html";
       }
     }
   </script>
