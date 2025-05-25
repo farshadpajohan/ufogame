@@ -2,12 +2,10 @@
 <html lang="fa">
 <head>
   <meta charset="UTF-8" />
-  <title>ورود / ثبت‌نام</title>
-  <!-- لود کتابخانه supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/supabase.min.js"></script>
+  <title>ثبت‌نام و ورود ساده با Supabase</title>
 </head>
 <body>
-  <h2>ورود یا ثبت‌نام</h2>
+  <h2>ثبت‌نام / ورود</h2>
 
   <input id="email" type="email" placeholder="ایمیل" />
   <input id="password" type="password" placeholder="رمز عبور" />
@@ -15,43 +13,46 @@
   <button onclick="signUp()">ثبت‌نام</button>
   <button onclick="signIn()">ورود</button>
 
-  <p id="msg"></p>
+  <p id="message"></p>
 
+  <!-- اول کتابخونه Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/supabase.min.js"></script>
+
+  <!-- بعد کد جاوااسکریپت -->
   <script>
-    // این کد حتما باید بعد از لود کتابخانه Supabase اجرا شود.
-    window.onload = () => {
-      const supabaseUrl = "https://qdyudrhnzbrgwerzqats.supabase.co";
-      const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkeXVkcmhuemJyZ3dlcnpxYXRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgxNjQzMTYsImV4cCI6MjA2Mzc0MDMxNn0.lVieDzL-8UK8e0QDUi1B3coI8tOVwWvoPFYxT4kik10";
+    const supabaseUrl = "https://qdyudrhnzbrgwerzqats.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkeXVkcmhuemJyZ3dlcnpxYXRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgxNjQzMTYsImV4cCI6MjA2Mzc0MDMxNn0.lVieDzL-8UK8e0QDUi1B3coI8tOVwWvoPFYxT4kik10";
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-      const client = supabase.createClient(supabaseUrl, supabaseKey);
+    function signUp() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
 
-      window.signUp = async function () {
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
-
-        const { data, error } = await client.auth.signUp({ email, password });
+      supabase.auth.signUp({ email, password }).then(({ data, error }) => {
         if (error) {
-          document.getElementById("msg").innerText = "❌ خطا در ثبت‌نام: " + error.message;
+          document.getElementById("message").innerText = "خطا در ثبت‌نام: " + error.message;
           console.error(error);
         } else {
-          document.getElementById("msg").innerText = "✅ ثبت‌نام موفق! لطفاً ایمیلت را تأیید کن.";
+          document.getElementById("message").innerText = "ثبت‌نام موفق! لطفاً ایمیل را تایید کنید.";
           console.log(data);
         }
-      };
+      });
+    }
 
-      window.signIn = async function () {
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
+    function signIn() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
 
-        const { data, error } = await client.auth.signInWithPassword({ email, password });
+      supabase.auth.signInWithPassword({ email, password }).then(({ data, error }) => {
         if (error) {
-          document.getElementById("msg").innerText = "❌ ورود ناموفق: " + error.message;
+          document.getElementById("message").innerText = "خطا در ورود: " + error.message;
           console.error(error);
         } else {
-          window.location.href = "dashboard.html";
+          document.getElementById("message").innerText = "ورود موفق!";
+          console.log(data);
         }
-      };
-    };
+      });
+    }
   </script>
 </body>
 </html>
