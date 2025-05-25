@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>ورود / ثبت‌نام</title>
-  <!-- لود کتابخونه Supabase -->
+  <!-- لود کتابخانه supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/supabase.min.js"></script>
 </head>
 <body>
@@ -18,12 +18,11 @@
   <p id="msg"></p>
 
   <script>
-    // صبر کن کتابخونه لود بشه و سپس کد اجرا بشه
+    // این کد حتما باید بعد از لود کتابخانه Supabase اجرا شود.
     window.onload = () => {
       const supabaseUrl = "https://qdyudrhnzbrgwerzqats.supabase.co";
       const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkeXVkcmhuemJyZ3dlcnpxYXRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgxNjQzMTYsImV4cCI6MjA2Mzc0MDMxNn0.lVieDzL-8UK8e0QDUi1B3coI8tOVwWvoPFYxT4kik10";
 
-      // اینجا کلاینت رو می‌سازیم
       const client = supabase.createClient(supabaseUrl, supabaseKey);
 
       window.signUp = async function () {
@@ -49,7 +48,7 @@
           document.getElementById("msg").innerText = "❌ ورود ناموفق: " + error.message;
           console.error(error);
         } else {
-          window.location.href = "dashboard.html"; // صفحه بعدی بعد از ورود موفق
+          window.location.href = "dashboard.html";
         }
       };
     };
