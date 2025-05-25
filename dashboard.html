@@ -10,24 +10,69 @@
   <p id="user-info">در حال بارگذاری...</p>
   <button onclick="signOut()">خروج از حساب</button>
 
+  <hr>
+  <h3>ثبت امتیاز</h3>
+  <input id="score" type="number" placeholder="امتیاز خود را وارد کنید" />
+  <button onclick="submitScore()">ثبت امتیاز</button>
+
+  <h4>امتیازهای شما</h4>
+  <ul id="score-list"></ul>
+
   <script>
     const supabaseUrl = "https://qdyudrhnzbrgwerzqats.supabase.co";
     const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkeXVkcmhuemJyZ3dlcnpxYXRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgxNjQzMTYsImV4cCI6MjA2Mzc0MDMxNn0.lVieDzL-8UK8e0QDUi1B3coI8tOVwWvoPFYxT4kik10";
-
     const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-    // چک می‌کنه کاربر لاگین هست یا نه
+    let currentUser = null;
+
     supabase.auth.getUser().then(({ data: { user }, error }) => {
       if (user) {
+        currentUser = user;
         document.getElementById('user-info').innerText = `👤 خوش آمدی ${user.email}`;
+        loadScores();
       } else {
-        window.location.href = "auth.html"; // اگه لاگین نیست، برگرد auth.html
+        window.location.href = "auth.html";
       }
     });
 
     async function signOut() {
       await supabase.auth.signOut();
       window.location.href = "auth.html";
+    }
+
+    async function submitScore() {
+      const score = parseInt(document.getElementById('score').value);
+      if (!score || !currentUser) return;
+
+      const { error } = await supabase.from('scores').insert([
+        { score, user_id: currentUser.id }
+      ]);
+
+      if (error) {
+        alert("❌ خطا در ثبت امتیاز: " + error.message);
+      } else {
+        alert("✅ امتیاز ثبت شد!");
+        document.getElementById('score').value = "";
+        loadScores();
+      }
+    }
+
+    async function loadScores() {
+      const { data, error } = await supabase
+        .from('scores')
+        .select('score, created_at')
+        .eq('user_id', currentUser.id)
+        .order('created_at', { ascending: false });
+
+      const list = document.getElementById('score-list');
+      list.innerHTML = "";
+      if (data) {
+        data.forEach(row => {
+          const li = document.createElement('li');
+          li.innerText = `${row.score} ⭐️ (در ${new Date(row.created_at).toLocaleDateString()})`;
+          list.appendChild(li);
+        });
+      }
     }
   </script>
 </body>
