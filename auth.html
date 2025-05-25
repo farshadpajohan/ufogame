@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="fa">
 <head>
   <meta charset="UTF-8" />
   <title>ورود / ثبت‌نام</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+  <!-- لود کتابخونه Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/supabase.min.js"></script>
 </head>
 <body>
   <h2>ورود یا ثبت‌نام</h2>
@@ -17,39 +18,41 @@
   <p id="msg"></p>
 
   <script>
-    // این کد باید بعد از لود کامل اسکریپت Supabase باشه
-    const supabaseUrl = "https://qdyudrhnzbrgwerzqats.supabase.co";
-    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkeXVkcmhuemJyZ3dlcnpxYXRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgxNjQzMTYsImV4cCI6MjA2Mzc0MDMxNn0.lVieDzL-8UK8e0QDUi1B3coI8tOVwWvoPFYxT4kik10";
+    // صبر کن کتابخونه لود بشه و سپس کد اجرا بشه
+    window.onload = () => {
+      const supabaseUrl = "https://qdyudrhnzbrgwerzqats.supabase.co";
+      const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkeXVkcmhuemJyZ3dlcnpxYXRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgxNjQzMTYsImV4cCI6MjA2Mzc0MDMxNn0.lVieDzL-8UK8e0QDUi1B3coI8tOVwWvoPFYxT4kik10";
 
-    // در نسخه v2 اینطوری client رو می‌سازیم:
-    const client = supabase.createClient(supabaseUrl, supabaseKey);
+      // اینجا کلاینت رو می‌سازیم
+      const client = supabase.createClient(supabaseUrl, supabaseKey);
 
-    async function signUp() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
+      window.signUp = async function () {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
 
-      const { data, error } = await client.auth.signUp({ email, password });
-      if (error) {
-        document.getElementById("msg").innerText = "❌ خطا در ثبت‌نام: " + error.message;
-        console.error(error);
-      } else {
-        document.getElementById("msg").innerText = "✅ ثبت‌نام موفق! لطفاً ایمیلت را تأیید کن.";
-        console.log(data);
-      }
-    }
+        const { data, error } = await client.auth.signUp({ email, password });
+        if (error) {
+          document.getElementById("msg").innerText = "❌ خطا در ثبت‌نام: " + error.message;
+          console.error(error);
+        } else {
+          document.getElementById("msg").innerText = "✅ ثبت‌نام موفق! لطفاً ایمیلت را تأیید کن.";
+          console.log(data);
+        }
+      };
 
-    async function signIn() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
+      window.signIn = async function () {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
 
-      const { data, error } = await client.auth.signInWithPassword({ email, password });
-      if (error) {
-        document.getElementById("msg").innerText = "❌ ورود ناموفق: " + error.message;
-        console.error(error);
-      } else {
-        window.location.href = "dashboard.html";
-      }
-    }
+        const { data, error } = await client.auth.signInWithPassword({ email, password });
+        if (error) {
+          document.getElementById("msg").innerText = "❌ ورود ناموفق: " + error.message;
+          console.error(error);
+        } else {
+          window.location.href = "dashboard.html"; // صفحه بعدی بعد از ورود موفق
+        }
+      };
+    };
   </script>
 </body>
 </html>
