@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>ورود / ثبت‌نام</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+</head>
+<body>
+  <h2>ورود یا ثبت‌نام به گیم‌نت UFO</h2>
+
+  <input id="email" type="email" placeholder="ایمیل" />
+  <input id="password" type="password" placeholder="رمز عبور" />
+  <br><br>
+
+  <button onclick="signUp()">ثبت‌نام</button>
+  <button onclick="signIn()">ورود</button>
+
+  <p id="message"></p>
+
+  <script>
+    const supabaseUrl = "https://qdyudrhnzbrgwerzqats.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkeXVkcmhuemJyZ3dlcnpxYXRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgxNjQzMTYsImV4cCI6MjA2Mzc0MDMxNn0.lVieDzL-8UK8e0QDUi1B3coI8tOVwWvoPFYxT4kik10";
+
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+    async function signUp() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const { error } = await supabase.auth.signUp({ email, password });
+      document.getElementById('message').innerText = error ? error.message : "✅ ثبت‌نام انجام شد. ایمیلت رو چک کن!";
+    }
+
+    async function signIn() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const { error, data } = await supabase.auth.signInWithPassword({ email, password });
+      document.getElementById('message').innerText = error ? error.message : "✅ ورود موفق!";
+      if (!error) {
+        console.log("User:", data.user);
+        // می‌تونی بعد از ورود، کاربر رو به صفحه دیگه ببری:
+        // window.location.href = "dashboard.html";
+      }
+    }
+  </script>
+</body>
+</html>
